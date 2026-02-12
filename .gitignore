@@ -9,11 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-src/components/
-src/actions
-src/hooks
-src/services
-src/helpers
+
 # testing
 /coverage
 

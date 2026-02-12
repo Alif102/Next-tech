@@ -12,7 +12,11 @@
 
 # testing
 /coverage
-
+src/components
+src/actions
+src/providers
+src/services
+src/app
 # next.js
 /.next/
 /out/

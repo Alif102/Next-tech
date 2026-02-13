@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import { FaLeaf, FaTint, FaSun, FaBug, FaRedo } from "react-icons/fa";
 
@@ -240,11 +241,13 @@ const PlantDoctor: React.FC = () => {
                 <h3 className="text-2xl font-bold mb-4 text-green-700">
                   Diagnosis: {diagnosis.title}
                 </h3>
-                <img
-                  src={diagnosis.image}
-                  alt={diagnosis.title}
-                  className="w-full h-48 object-cover rounded-lg mb-6 mx-auto"
-                />
+               <Image
+  src={diagnosis.image}      // original src
+  alt={diagnosis.title}      // alt text
+  width={600}                // set a width
+  height={192}               // set a height (maintain aspect ratio)
+  className="rounded-lg mb-6 mx-auto object-cover w-full h-48"
+/>
                 <p className="text-lg mb-6 text-gray-700">
                   {diagnosis.solution}
                 </p>

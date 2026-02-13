@@ -2,16 +2,22 @@
 
 import { createCategory } from "@/actions/createCategory";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+
+interface Category {
+  id: string;
+  name: string;
+  picture: string;
+}
 
 const AddCategory = () => {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // load categories
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/categories`)
       .then((res) => res.json())
-      .then((data) => setCategories(data));
+      .then((data: Category[]) => setCategories(data));
   }, []);
 
   async function handleSubmit(formData: FormData) {
@@ -19,14 +25,14 @@ const AddCategory = () => {
     const result = await createCategory(formData);
 
     if (result?.id) {
-      setCategories((prev) => [result, ...prev]);
+      setCategories((prev) => [result as Category, ...prev]);
     }
 
     setLoading(false);
   }
 
   return (
-    <div className=" mx-auto space-y-8">
+    <div className="mx-auto space-y-8">
       {/* FORM */}
       <form
         action={handleSubmit}
@@ -77,14 +83,17 @@ const AddCategory = () => {
           </thead>
 
           <tbody>
-            {categories?.map((cat, i) => (
+            {categories.map((cat, i) => (
               <tr key={cat.id}>
                 <td className="border p-2">{i + 1}</td>
                 <td className="border p-2">{cat.name}</td>
                 <td className="border p-2">
-                  <img
+                  <Image
                     src={cat.picture}
-                    className="w-14 h-14 object-cover rounded"
+                    alt={cat.name}
+                    width={56}
+                    height={56}
+                    className="rounded object-cover"
                   />
                 </td>
               </tr>

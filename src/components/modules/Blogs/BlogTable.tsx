@@ -2,17 +2,22 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import {
-  FaEye,
-  FaUser,
-  FaTag,
-  FaLeaf,
-  FaStar,
-  FaCalendarAlt,
-} from "react-icons/fa";
+import { FaEye, FaUser, FaTag, FaLeaf, FaStar, FaCalendarAlt } from "react-icons/fa";
+
+interface Blog {
+  id: string;
+  title: string;
+  thumbnail: string;
+  isFeatured?: boolean;
+  plantType: string;
+  author?: { name: string };
+  tags?: string[];
+  views: number;
+  createdAt: string;
+}
 
 interface BlogTableProps {
-  post: any;
+  post: Blog;
 }
 
 const BlogTable = ({ post }: BlogTableProps) => {
@@ -42,31 +47,28 @@ const BlogTable = ({ post }: BlogTableProps) => {
       </td>
 
       {/* Title */}
-      <td className="p-3 font-semibold text-gray-800 max-w-xs">
-        {post.title}
-      </td>
+      <td className="p-3 font-semibold text-gray-800 max-w-xs">{post.title}</td>
 
       {/* Plant Type */}
       <td className="p-3 text-green-600">
-  <div className="flex items-center gap-2">
-    <FaLeaf />
-    {post.plantType}
-  </div>
-</td>
-
+        <div className="flex items-center gap-2">
+          <FaLeaf />
+          {post.plantType}
+        </div>
+      </td>
 
       {/* Author */}
       <td className="p-3 text-gray-600">
         <div className="flex items-center gap-2">
           <FaUser />
-          {post.author?.name}
+          {post.author?.name || "Unknown"}
         </div>
       </td>
 
       {/* Tags */}
       <td className="p-3">
         <div className="flex flex-wrap gap-1">
-          {post.tags?.map((tag: string, index: number) => (
+          {post.tags?.map((tag, index) => (
             <span
               key={index}
               className="flex items-center gap-1 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full"

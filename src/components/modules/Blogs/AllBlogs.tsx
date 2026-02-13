@@ -1,26 +1,52 @@
-"use server"
+"use server";
 
 import { deleteBlog } from "@/actions/deleteBlog";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getBlogs(page: number, limit: number) {
-  const res = await fetch( `${process.env.NEXT_PUBLIC_BASE_API}/post?page=${page}&limit=${limit}`, {
-    cache: "no-store",
-    next: { tags: ["BLOGS"] },
-  });
+interface Blog {
+  id: string;
+  title: string;
+  thumbnail: string;
+}
+
+interface BlogResponse {
+  data: Blog[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+  };
+}
+
+interface PageProps {
+  searchParams?: {
+    page?: string;
+    limit?: string;
+  };
+}
+
+async function getBlogs(
+  page: number,
+  limit: number
+): Promise<BlogResponse> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_API}/post?page=${page}&limit=${limit}`,
+    {
+      cache: "no-store",
+      next: { tags: ["BLOGS"] },
+    }
+  );
 
   return res.json();
 }
 
-export default async function AllBlogs({ searchParams }: any) {
+export default async function AllBlogs({ searchParams }: PageProps) {
   const page = Number(searchParams?.page || 1);
   const limit = Number(searchParams?.limit || 5);
 
   const result = await getBlogs(page, limit);
   const blogs = result.data;
-  const pagination = result.pagination;
 
   return (
     <div className="p-6">
@@ -37,7 +63,7 @@ export default async function AllBlogs({ searchParams }: any) {
           </thead>
 
           <tbody>
-            {blogs.map((blog: any) => (
+            {blogs.map((blog) => (
               <tr key={blog.id} className="border-t">
                 <td className="p-3">
                   <Image
@@ -60,22 +86,19 @@ export default async function AllBlogs({ searchParams }: any) {
                   </Link>
 
                   <form action={deleteBlog.bind(null, blog.id)}>
-  <button
-    type="submit"
-    className="px-3 py-1 bg-red-500 text-white rounded"
-   
-  >
-    Delete
-  </button>
-</form>
+                    <button
+                      type="submit"
+                      className="px-3 py-1 bg-red-500 text-white rounded"
+                    >
+                      Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-   
     </div>
   );
 }

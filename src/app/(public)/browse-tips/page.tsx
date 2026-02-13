@@ -5,16 +5,29 @@ import { FaTable, FaThLarge } from "react-icons/fa";
 import BlogCard from "@/components/modules/Blogs/BlogCard";
 import BlogTable from "@/components/modules/Blogs/BlogTable";
 
-interface Blog {
+interface ApiBlog {
   id: string;
   title: string;
-  thumbnail: string; // unified with BlogTable
+  image?: string;
+  thumbnail?: string;
   plantType: string;
-  author?: { name: string }; // optional, as in BlogTable
+  author?: { name: string } | string;
   tags?: string[];
   views: number;
   createdAt: string;
   isFeatured?: boolean;
+}
+
+interface Blog {
+  id: string;
+  title: string;
+  thumbnail: string;
+  plantType: string;
+  author?: { name: string };
+  tags: string[];
+  views: number;
+  createdAt: string;
+  isFeatured: boolean;
 }
 
 const AllBlogsPage = () => {
@@ -25,13 +38,12 @@ const AllBlogsPage = () => {
     const fetchBlogs = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post`);
-        const data = await res.json();
+        const data: { data: ApiBlog[] } = await res.json();
 
-        // Map API response to match Blog type
-        const mappedBlogs: Blog[] = data.data.map((b: any) => ({
+        const mappedBlogs: Blog[] = data.data.map((b) => ({
           id: b.id,
           title: b.title,
-          thumbnail: b.image || b.thumbnail, // fallback
+          thumbnail: b.image || b.thumbnail || "",
           plantType: b.plantType,
           author: b.author
             ? typeof b.author === "string"
@@ -46,7 +58,7 @@ const AllBlogsPage = () => {
 
         setBlogs(mappedBlogs);
       } catch (err) {
-        console.error(err);
+        console.error("Failed to fetch blogs:", err);
       }
     };
 
@@ -55,9 +67,11 @@ const AllBlogsPage = () => {
 
   return (
     <div className="py-30 px-4 max-w-7xl mx-auto">
+      {/* Header */}
       <div className="flex justify-between items-center my-6">
         <h2 className="text-4xl">Browse Gardening Tips</h2>
 
+        {/* View toggle */}
         <div className="flex gap-4 text-2xl cursor-pointer">
           <FaTable
             onClick={() => setView("table")}
@@ -70,6 +84,7 @@ const AllBlogsPage = () => {
         </div>
       </div>
 
+      {/* Blogs Grid or Table */}
       {view === "card" ? (
         <div className="grid grid-cols-3 gap-4 mx-auto max-w-6xl my-5">
           {blogs.map((blog) => (

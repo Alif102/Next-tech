@@ -1,26 +1,78 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useEffect, useState } from "react";
+import { FaTable, FaThLarge } from "react-icons/fa";
 import BlogCard from "@/components/modules/Blogs/BlogCard";
-import { Metadata } from "next";
+import BlogTable from "@/components/modules/Blogs/BlogTable";
 
-export const metadata: Metadata = {
-  title: "Browse Gardening Tips | Next JS",
-  description:
-    "Browse all blog posts on web development, Next.js, React, and more. Stay updated with the latest tutorials and articles.",
-};
+const AllBlogsPage = () => {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [view, setView] = useState<"table" | "card">("table");
 
-const AllBlogsPage = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post`, {
-    cache: "no-store",
-  });
-  const { data: blogs } = await res.json();
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/post`
+      );
+      const data = await res.json();
+      setBlogs(data.data);
+    };
+
+    fetchBlogs();
+  }, []);
+
   return (
     <div className="py-30 px-4 max-w-7xl mx-auto">
-      <h2 className="text-center text-4xl">Browse Gardening Tips</h2>
-      <div className="grid grid-cols-3 gap-4 mx-auto max-w-6xl my-5">
-        {blogs.map((blog: any) => (
-          <BlogCard key={blog.id} post={blog} />
-        ))}
+      <div className="flex justify-between items-center my-6">
+        <h2 className="text-4xl">Browse Gardening Tips</h2>
+
+        {/* 🔹 Toggle Icons */}
+        <div className="flex gap-4 text-2xl cursor-pointer">
+          <FaTable
+            onClick={() => setView("table")}
+            className={`${
+              view === "table" ? "text-green-600" : "text-gray-400"
+            }`}
+          />
+          <FaThLarge
+            onClick={() => setView("card")}
+            className={`${
+              view === "card" ? "text-green-600" : "text-gray-400"
+            }`}
+          />
+        </div>
       </div>
+
+      {/* 🔹 Conditional View */}
+      {view === "card" ? (
+        <div className="grid grid-cols-3 gap-4 mx-auto max-w-6xl my-5">
+          {blogs.map((blog: any) => (
+            <BlogCard key={blog.id} post={blog} />
+          ))}
+        </div>
+      ) : (
+        <div className="overflow-x-auto bg-white rounded-2xl shadow-lg">
+          <table className="min-w-full text-left">
+            <thead className="bg-green-600 text-white text-sm uppercase">
+              <tr>
+                <th className="p-4">Image</th>
+                <th className="p-4">Title</th>
+                <th className="p-4">Plant Type</th>
+                <th className="p-4">Author</th>
+                <th className="p-4">Tags</th>
+                <th className="p-4">Views</th>
+                <th className="p-4">Created</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {blogs.map((blog: any) => (
+                <BlogTable key={blog.id} post={blog} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

@@ -38,12 +38,13 @@ const SeasonalGuide: React.FC = () => {
     ],
   };
 
-  const seasonIcons: Record<Season, JSX.Element> = {
-    spring: <FaLeaf className="text-green-500" />,
-    summer: <FaSun className="text-yellow-500" />,
-    fall: <FaTree className="text-orange-500" />,
-    winter: <FaSnowflake className="text-blue-400" />,
-  };
+ const seasonIcons: Record<Season, React.ReactNode> = {
+  spring: <FaLeaf className="text-green-500" />,
+  summer: <FaSun className="text-yellow-500" />,
+  fall: <FaTree className="text-orange-500" />,
+  winter: <FaSnowflake className="text-blue-400" />,
+};
+
 
   const buttonStyles = {
     active: "bg-green-600 text-white",

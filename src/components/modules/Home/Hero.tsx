@@ -17,24 +17,17 @@ export default function Hero() {
     });
   }, []);
 
-  const float = {
-    animate: {
-      y: [0, -15, 0],
-    },
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
-
   return (
     <div className="max-h-screen w-full relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-green-100 to-green-50" />
 
       {/* Floating Icons */}
-      <motion.div {...float} className="absolute top-24 left-16 text-green-400 text-4xl">
+      <motion.div
+        animate={{ y: [0, -15, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-24 left-16 text-green-400 text-4xl"
+      >
         <FaLeaf />
       </motion.div>
 
